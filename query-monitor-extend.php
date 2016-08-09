@@ -31,7 +31,7 @@ class cssllc_query_monitor_extend {
 	function __construct() {
 		if (class_exists('QM_Collector'))
 			foreach ( glob( trailingslashit( dirname( __FILE__ ) ) . 'collectors/*.php' ) as $file )
-				include $file;
+				require_once $file;
 
 		if ( defined( 'QMX_HIGHLIGHT_SUPPRESSEDS' ) && QMX_HIGHLIGHT_SUPPRESSEDS )
 			self::$highlight_suppresseds = true;
@@ -47,6 +47,7 @@ class cssllc_query_monitor_extend {
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_transients', 99, 2 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_php_errors', 109 );
+
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_assets', 80, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_transients', 100, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_php_errors', 110, 2 );
@@ -61,7 +62,7 @@ class cssllc_query_monitor_extend {
 	public static function include_outputters( $output ) {
 		if (class_exists('QM_Output_Html'))
 			foreach ( glob( trailingslashit( dirname( __FILE__ ) ) . 'output/*.php' ) as $file )
-				include $file;
+				require_once $file;
 
 		return $output;
 	}

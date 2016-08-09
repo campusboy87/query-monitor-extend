@@ -44,10 +44,25 @@ jQuery(function($) {
     $("#qm-qmx-included_files .qmx-switch input[value='Plugin: query-monitor']").on('change',function() {
         var qm = $(this);
         var qmx = $(this).closest('.qmx-switch').parent().find('.qmx-switch input[value="Plugin: query-monitor-extend"]');
+
         if (!qm.is(':checked') && qmx.is(':checked')) {
             qmx.removeAttr('checked');
         } else if (qm.is(':checked') && !qmx.is(':checked'))
             qmx.attr('checked','checked');
+    });
+
+    $("#qm-qmx-included_files .qmx-switch input[value='Plugin: ']").on('change',function() {
+        var el = $(this);
+        var qm = $(this).closest('.qmx-switch').parent().find('.qmx-switch input[value="Plugin: query-monitor"]');
+        var qmx = $(this).closest('.qmx-switch').parent().find('.qmx-switch input[value="Plugin: query-monitor-extend"]');
+
+        if (el.is(':checked')) {
+            qm.attr('checked','checked');
+            qmx.attr('checked','checked');
+        } else {
+            qm.removeAttr('checked');
+            qmx.removeAttr('checked');
+        }
     });
 
 });
