@@ -54,10 +54,10 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
             $this->data['files'][$file] = array(
                 'file' => $file,
+                'i' => $i,
                 'component' => $component,
                 'filesize' => filesize( $file ),
                 'selectors' => $this->get_selectors( $file ),
-                'i' => $i,
             );
         }
 
@@ -274,8 +274,8 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                                             ? ' class="' . implode( ' ', array_keys( $classes ) ) . '"'
                                             : '' ) .
                                     '>' .
-                                        '<td class="qm-num" data-qm-sort-weight="' . ( 'errors' === $status ? 0 : $details['i'] ) . '">' .
-                                            ( 'errors' === $status ? ' ' : $details['i'] + 1 ) .
+                                        '<td class="qm-num" data-qm-sort-weight="' . ( 'errors' === $status ? 0 : ( $details['i'] + 1 ) ) . '">' .
+                                            ( 'errors' === $status ? ' ' : ( $details['i'] + 1 ) ) .
                                         '</td>' .
                                         '<td data-qm-sort-weight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
                                             (
@@ -321,7 +321,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                     '</tr>' .
 					'<tr>' .
                         '<td colspan="2">Total files: ' . count( $this->data['files'] ) . '</td>' .
-                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / intval( $details['i'] ) ) / 1024, 2) . ' KB</td>' .
+                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / count( $this->data['files'] ) ) / 1024, 2) . ' KB</td>' .
                     '</tr>' .
 				'</tfoot>' .
 
