@@ -42,7 +42,7 @@ class cssllc_query_monitor_extend {
 
 		add_action( ( is_admin() ? 'admin' : 'wp' ) . '_enqueue_scripts', array( __CLASS__, 'action_enqueue_scripts' ) );
 
-		add_filter( 'qm/output/menu_class/final', array( __CLASS__, 'filter_qm_output_menu_class_final' ), 9999999 );
+		add_filter( 'qm/output/menu_class', array( __CLASS__, 'filter_qm_output_menu_class' ), 9999999 );
 
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_transients', 99, 2 );
@@ -67,7 +67,7 @@ class cssllc_query_monitor_extend {
 		return $output;
 	}
 
-	public static function filter_qm_output_menu_class_final( $classes ) {
+	public static function filter_qm_output_menu_class( $classes ) {
 		if ( in_array( 'qm-all-clear', $classes ) )
 			return array_merge( $classes, array( 'qmx' ) );
 
@@ -124,8 +124,8 @@ class cssllc_query_monitor_extend {
 			'error'                 => '#c00',
 			'warning_suppressed'    => '#c00',
 			'notice_suppressed'     => '#740',
-			'alert'                 => '#f60',
 			'notice'                => '#740',
+			'alert'                 => '#f60',
 			'expensive'             => '#b60',
 			'strict'                => '#3c3c3c',
 			'strict_suppressed'     => '#3c3c3c',
