@@ -233,7 +233,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
                     $this->data['files'] = $this->get_data_sorted_by_user_pref( $this->data['files'] );
 
-                    $filesize = $count = 0;
+                    $filesize = $visible = 0;
 
                     foreach ( array( 'errors', 'files' ) as $status )
                         if (
@@ -242,30 +242,30 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                             && count( $this->data[$status] )
                         )
                             foreach ( $this->data[$status] as $path => $details ) {
-                                if ( 'files' === $status )
+                                $classes = array();
+
+                                if ( 'files' === $status ) {
                                     $filesize = $filesize + intval( $details['filesize'] );
 
-                                $classes = array();
-                                if ( 'errors' === $status )
-                                    $classes['qm-warn'] = 1;
-
-                                if ( !$switched_plugins && false !== strpos( $details['component'], 'Plugin: ' ) )
-                                    $classes['qm-hide'] = 1;
-
-                                if ( !$switched_qm && 'Plugin: query-monitor' === $details['component'] )
-                                    $classes['qm-hide'] = 1;
-
-                                if ( !$switched_qmx && 'Plugin: query-monitor-extend' === $details['component'] )
+                                    if ( !$switched_plugins && false !== strpos( $details['component'], 'Plugin: ' ) )
                                         $classes['qm-hide'] = 1;
 
-                                if ( !$switched_core && 'Core' === $details['component'] )
-                                    $classes['qm-hide'] = 1;
+                                    if ( !$switched_qm && 'Plugin: query-monitor' === $details['component'] )
+                                        $classes['qm-hide'] = 1;
 
-                                if ( !$switched_theme && 'Theme' === $details['component'] )
-                                    $classes['qm-hide'] = 1;
+                                    if ( !$switched_qmx && 'Plugin: query-monitor-extend' === $details['component'] )
+                                            $classes['qm-hide'] = 1;
 
-                                if ( !array_key_exists( 'qm-hide', $classes ) )
-                                    $count++;
+                                    if ( !$switched_core && 'Core' === $details['component'] )
+                                        $classes['qm-hide'] = 1;
+
+                                    if ( !$switched_theme && 'Theme' === $details['component'] )
+                                        $classes['qm-hide'] = 1;
+
+                                    if ( !array_key_exists( 'qm-hide', $classes ) )
+                                        $visible++;
+                                } else if ( 'errors' === $status )
+                                    $classes['qm-warn'] = 1;
 
                                 echo '<tr ' .
                                         'data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" ' .
@@ -315,13 +315,13 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
 				echo '</tbody>' .
 				'<tfoot>' .
-                    '<tr class="qm-items-shown' . ( 0 !== $count ? ' qm-hide' : '' ) . '">' .
-                        '<td colspan="4">Files in filter: <span class="qm-items-number">0</span></td>' .
+                    '<tr class="qm-items-shown' . ( !$this->has_user_pref( $this->collector->id . '/show' ) && count( $this->data['files'] ) === $visible ? ' qm-hide' : '' ) . '">' .
+                        '<td colspan="4">Files in filter: <span class="qm-items-number">' . $visible . '</span></td>' .
                         '<td colspan="2" class="qm-hide">Total in filter: <span class="qm-items-filesize">0<span></td>' .
                     '</tr>' .
 					'<tr>' .
-                        '<td colspan="2">Total files: ' . $details['num'] . '</td>' .
-                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / intval( $details['num'] ) ) / 1024, 2) . ' KB</td>' .
+                        '<td colspan="2">Total files: ' . count( $this->data['files'] ) . '</td>' .
+                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / intval( $details['i'] ) ) / 1024, 2) . ' KB</td>' .
                     '</tr>' .
 				'</tfoot>' .
 
